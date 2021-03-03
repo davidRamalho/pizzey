@@ -31,12 +31,7 @@ try:
     )
     new_address = driver.find_element_by_id('HeaderAddressLabel').text
     address = re.split('; |, |\*|\n|   ', new_address)
-    print(address)
 except:
     driver.quit()
 
-
-
-
-
-#find_element_by_id('printLabel')
+driver.quit()

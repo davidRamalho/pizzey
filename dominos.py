@@ -5,23 +5,30 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 import time
+import address_fetch
+import re
 
 PATH = "/home/nerdastic/chromedriver"
 driver = webdriver.Chrome(PATH)
 
-#driver.get("https://davidramalhoportfolio.herokuapp.com/")
 driver.get("https://www.dominos.ca/en/pages/order/#!/locations/search/")
 
-delivery_icon = driver.find_element_by_css_selector('#locationSearchForm > div > div.form__control-group.circ-icons > label.js-delivery.c-locationsearch-delivery > span.Delivery.c-delivery.circ-icons__icon.circ-icons__icon--delivery')
-time.sleep(0.2)
+try:
+    delivery = WebDriverWait(driver, 0.5).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "#locationSearchForm > div > div.form__control-group.circ-icons > label.js-delivery.c-locationsearch-delivery > span.Delivery.c-delivery.circ-icons__icon.circ-icons__icon--delivery"))
+    )
+    delivery_icon = driver.find_element_by_css_selector('#locationSearchForm > div > div.form__control-group.circ-icons > label.js-delivery.c-locationsearch-delivery > span.Delivery.c-delivery.circ-icons__icon.circ-icons__icon--delivery')
+    delivery_icon.click()
+    time.sleep(0.2)
+except:
+    print('Failed to Click on Delivery Icon')
 
-delivery_icon.click()
-time.sleep(0.2)
 
-address = ['1223 ROSEHILL DR NW', 'CALGARY AB', 'T2K 1M3']
+address = address_fetch.address
 city_in_address = (address[1].split())[0]
 province_in_address = (address[1].split())[1]
 
+time.sleep(0.2)
 street = driver.find_element_by_id('Street')
 street.click()
 street.send_keys(address[0])
@@ -39,10 +46,9 @@ postal_code.send_keys(address[2])
 
 continue_for_delivery = driver.find_element_by_css_selector('#locationSearchForm > div > div.form__control-group.form__control-group--actions--aligncenter > button')
 continue_for_delivery.click()
-time.sleep(2)
 
 try:
-    future = WebDriverWait(driver, 10).until(
+    future = WebDriverWait(driver, 0.5).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "#changeOrderTimingOverlay > div.card__body > form > fieldset > div > div:nth-child(2) > div > div.choose-future-time > select"))
     )
     use_future = driver.find_element_by_class_name('btn--future-time')
@@ -51,27 +57,15 @@ try:
     future2.send_keys(Keys.ARROW_DOWN)
     use_future.click()
 except:
-    print('no good')
+    print('Local Dominos is Open :)')
 
 time.sleep(1)
 
 coupons_page = driver.find_element_by_css_selector('#_dpz > header > nav.nav.nav--primary > div.nav__inner > ul > li:nth-child(6) > a')
 coupons_page.click()
 
+time.sleep(0.3)
 
-# string = 'T2K 1M3'
-# for letter in string:
-#   time.sleep(0.1)
-#   search.send_keys(letter)
-
-# time.sleep(0.5)
-# search.send_keys(Keys.RETURN)
-
-# time.sleep(0.5)
-# search.send_keys(Keys.RETURN)
-
-# time.sleep(0.5)
-# new_address = driver.find_element_by_id('HeaderAddressLabel').text
-# print(new_address)
-
-# #find_element_by_id('printLabel')
+must_watch = driver.find_element_by_css_selector('#js-pageSplit > section > div.js-couponContainer > div > div.featured-coupon.promo.promo--featured.js-featuredCoupon.grid__cell--1.featured-coupon--top')
+must_watch_coupon = re.split('; |, |\*|\n|   ', must_watch.text)
+print(must_watch_coupon)

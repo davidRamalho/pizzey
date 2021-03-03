@@ -68,4 +68,16 @@ time.sleep(0.3)
 
 must_watch = driver.find_element_by_css_selector('#js-pageSplit > section > div.js-couponContainer > div > div.featured-coupon.promo.promo--featured.js-featuredCoupon.grid__cell--1.featured-coupon--top')
 must_watch_coupon = re.split('; |, |\*|\n|   ', must_watch.text)
-print(must_watch_coupon)
+
+coupons_list = driver.find_elements_by_class_name("local-coupon")
+
+print(len(coupons_list))
+
+for coupon in coupons_list:
+  x = re.split('; |, |\*|\n|   ', coupon.text)
+  x.pop(0)
+  #coupon = coupon.text.split('ADD COUPON')
+  print(x)
+
+
+#print(must_watch_coupon)

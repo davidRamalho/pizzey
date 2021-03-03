@@ -14,7 +14,7 @@ driver.get("https://www.canadapost.ca/info/mc/personal/postalcode/fpc.jsf")
 
 search = driver.find_element_by_id('addressComplete')
 search.click()
-string = 'T2K 1M3'
+string = 'T2R 0H8'
 for letter in string:
   time.sleep(0.1)
   search.send_keys(letter)
